@@ -1,62 +1,38 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
-	"bazil.org/fuse"
-	"bazil.org/fuse/fs"
 	log "github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
 )
 
-func mount(mp string) error {
+var config Config
+var helpRequested bool
 
-	if len(mp) == 0 {
-		return errors.New("invalid mount point")
-	}
+func init() {
+	flag.IntVarP(&config.Count, "count", "n", 10, "number of files to generate.")
+	flag.StringVarP(&config.Type, "type", "t", "txt", "type of files to generate. Supported formats are [txt, bin, png]")
+	flag.IntVarP(&config.Size, "size", "s", 100, "size in bytes of files to generate.")
 
-	log.Info("Starting ", os.Args[0][2:], "... mounting ", mp)
-
-	c, err := fuse.Mount(
-		mp,
-		fuse.FSName("oddfs"),
-		fuse.Subtype("oddfs"),
-		fuse.LocalVolume(),
-		fuse.VolumeName("OddFS Volume"),
-	)
-
-	if err != nil {
-		return err
-	}
-
-	defer c.Close()
-
-	err = fs.Serve(c, NewOddFS())
-
-	if err != nil {
-		return err
-	}
-
-	<-c.Ready
-
-	if err := c.MountError; err != nil {
-		return err
-	}
-
-	return nil
+	flag.BoolVarP(&helpRequested, "help", "h", false, "Display usage information (this message)")
 }
 
 func main() {
 	flag.Parse()
+
+	if helpRequested {
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	if flag.NArg() < 1 {
 		fmt.Fprintln(os.Stderr, "ERROR: must specify mount point")
 		os.Exit(1)
 	}
 
-	err := mount(flag.Arg(0))
+	err := mount(flag.Arg(0), &config)
 
 	if err != nil {
 		log.Fatal(err)
