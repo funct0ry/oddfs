@@ -5,20 +5,20 @@ import (
 	"encoding/hex"
 )
 
-func randomHexBytes(size int) ([]byte, error) {
+func randomHexBytes(size uint64) ([]byte, error) {
 	b, err := randomBytes(size)
 
 	if err != nil {
-		return b, err
+		return nil, err
 	}
-	return []byte(hex.EncodeToString(b)), nil
+	return []byte(hex.EncodeToString(b))[0:size], nil
 }
 
-func randomBytes(size int) ([]byte, error) {
+func randomBytes(size uint64) ([]byte, error) {
 	b := make([]byte, size)
 	_, err := rand.Read(b)
 	if err != nil {
-		return b, err
+		return nil, err
 	}
 	return b, nil
 }

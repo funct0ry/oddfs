@@ -14,7 +14,7 @@ var helpRequested bool
 func init() {
 	flag.IntVarP(&config.Count, "count", "n", 10, "number of files to generate.")
 	flag.StringVarP(&config.Type, "type", "t", "txt", "type of files to generate. Supported formats are [txt, bin, png]")
-	flag.IntVarP(&config.Size, "size", "s", 100, "size in bytes of files to generate.")
+	flag.Uint64VarP(&config.Size, "size", "s", 100, "size in bytes of files to generate.")
 
 	flag.BoolVarP(&helpRequested, "help", "h", false, "Display usage information (this message)")
 }

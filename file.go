@@ -27,7 +27,7 @@ func (f File) ReadAll(ctx context.Context) ([]byte, error) {
 
 // NewTextFile returns a new text file with hex encoded random
 // bytes of a given size
-func NewTextFile(size int) *File {
+func NewTextFile(size uint64) *File {
 	fdata, _ := randomHexBytes(size)
 	return &File{
 		inode: nextInode(),
@@ -37,7 +37,7 @@ func NewTextFile(size int) *File {
 
 // NewBinaryFile returns a new binary file with random
 // bytes of a given size
-func NewBinaryFile(size int) *File {
+func NewBinaryFile(size uint64) *File {
 	fdata, _ := randomBytes(size)
 	return &File{
 		inode: nextInode(),

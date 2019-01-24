@@ -6,7 +6,7 @@ import "fmt"
 type Config struct {
 	Count int
 	Type  string
-	Size  int
+	Size  uint64
 }
 
 // Name constructs and returns a file name from type and number
